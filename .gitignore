@@ -1,0 +1,29 @@
+#env
+.env
+/logs
+
+# dependencies
+node_modules
+/node_modules
+/build/*
+build/*
+/src/views
+
+# IDEs and editors
+*.launch
+.settings/
+/uploads
+*.sublime-workspace
+
+# IDE - VSCode
+.vscode/*
+.vscode/settings.json
+.vscode/tasks.json
+.vscode/launch.json
+.vscode/extensions.json
+
+# misc
+/.sass-cache
+/connect.lock
+/coverage
+npm-debug.log
