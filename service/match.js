@@ -29,7 +29,6 @@ const Match = {
     async getMatchData() {
         try {
             const data = await matchDAO.getAllMatches();
-            console.log("data:", data)
             return Promise.resolve(data);
         } catch (error) {
             return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error.message, error.stack));

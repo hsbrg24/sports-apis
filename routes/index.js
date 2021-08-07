@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
 const Match = require('../service/match');
-const constant = require('../utils/constant')
+const constant = require('../utils/constant');
 const customResponse = require('../utils/custom-response');
 
 /* GET home page. */
