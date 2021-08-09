@@ -26,7 +26,6 @@ router.get('/service', (req, res) => {
     .catch(err => {
       console.error(err);
     });
-
 });
 
 router.post('/postMatchData', async (req, res) => {
@@ -50,5 +49,28 @@ router.get('/getallData', async (req, res) => {
       res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
     });
 });
+
+router.get('/getMatchLineUp', async (req, res) => {
+  await Match.getMatchLineUp()
+    .then((data) => {
+      res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('Data Retrived Successfully', data));
+    })
+    .catch((error) => {
+      // winstonLogging.error(`${error.status || 500} - ${error.message} - ${req.originalUrl}`);
+      res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
+    });
+});
+
+router.get('/getAllSavedMatchesIds', async (req, res) => {
+  await Match.getAllSavedMatches()
+    .then((data) => {
+      res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('Data Retrived Successfully', data));
+    })
+    .catch((error) => {
+      // winstonLogging.error(`${error.status || 500} - ${error.message} - ${req.originalUrl}`);
+      res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
+    });
+});
+
 
 module.exports = router;
