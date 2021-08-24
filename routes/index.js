@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const fetch = require('node-fetch');
-const Match = require('../service/match');
+const Match = require('../service/tournamentService');
 const constant = require('../utils/constant');
 const customResponse = require('../utils/custom-response');
 
@@ -11,20 +11,26 @@ router.get('/', function (req, res, next) {
 });
 
 
-router.get('/service', (req, res) => {
-  fetch("https://api-basketball.p.rapidapi.com/timezone", {
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-host": "api-basketball.p.rapidapi.com"
-    }
-  })
-    .then(response => {
-      console.log(response);
-      // Promise.resolve(response)
-      res.json(response);
+
+router.get('/tournament', async (req, res) => {
+  await Match.recentTournament()
+    .then((data) => {
+      res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('Data Fetched Successfully', data));
     })
-    .catch(err => {
-      console.error(err);
+    .catch((error) => {
+      // winstonLogging.error(`${error.status || 500} - ${error.message} - ${req.originalUrl}`);
+      res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
+    });
+});
+
+router.get('/tournament/:id', async (req, res) => {
+  await Match.tournament(req.params.id)
+    .then((data) => {
+      res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('Data Fetched Successfully', data));
+    })
+    .catch((error) => {
+      // winstonLogging.error(`${error.status || 500} - ${error.message} - ${req.originalUrl}`);
+      res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
     });
 });
 
@@ -68,6 +74,16 @@ router.get('/getAllSavedMatchesIds', async (req, res) => {
     })
     .catch((error) => {
       // winstonLogging.error(`${error.status || 500} - ${error.message} - ${req.originalUrl}`);
+      res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
+    });
+});
+
+router.get('/getAllSavedTournamentsIds', async (req, res) => {
+  await Match.getSavedTournaments()
+    .then((data) => {
+      res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('Data Retrived Successfully', data));
+    })
+    .catch((error) => {
       res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
     });
 });

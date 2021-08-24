@@ -30,7 +30,8 @@ const UserService = {
             const data = await userDao.create(dataSet);
             return Promise.resolve(data);
         } catch (error) {
-            return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error.message, error.stack));
+            console.log("error", error);
+            return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error));
         }
     },
 
