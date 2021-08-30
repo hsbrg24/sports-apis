@@ -36,6 +36,14 @@ exports.create = (matchDetail) => {
     }).save();
 };
 
-exports.getAllMatches = () => {
-    return matchSchema.find();
+exports.getAllMatches = (condition) => {
+    return matchSchema.find(condition);
+}
+
+exports.getMatchesByDate = (date) => {
+    console.log("utc String", new Date(date).toUTCString());
+    if (date)
+        return matchSchema.find({ "start_date.gmt": { $gte: new Date(date).toUTCString() } })
+    else
+        return matchSchema.find({ "start_date.gmt": { $gte: new Date() } })
 }

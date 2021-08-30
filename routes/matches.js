@@ -4,6 +4,7 @@ const router = express.Router();
 const constant = require('../utils/constant');
 const MatchService = require('../service/matchService');
 const customResponse = require('../utils/custom-response');
+const { getSavedMatchesFromDB } = require('../service/tournamentService');
 
 router.get('/getMatch/:id', async (req, res) => {
   await MatchService.getMatchData(req.params.id)
@@ -49,6 +50,36 @@ router.get('/getPlayerData/:tId/:pId', async (req, res) => {
     res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
   });
 });
+
+router.get('/todaysmatches/:date?', async (req, res) => {
+  await MatchService.getTodaysMatches(req.params)
+  .then((data) => {
+    if(data.length > 0)
+    res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('All Matches', data[0]));
+    else
+    res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('No Upcoming matches found, please fetch new Data!'));
+  })
+  .catch((error) => {
+    // winstonLogging.error(`${error.status || 500} - ${error.message} - ${req.originalUrl}`);
+    res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
+  });
+});
+
+router.get('/getMatchesByIDs/:tId/:rId', async (req, res) => {
+  await getSavedMatchesFromDB(req.params)
+  .then((data) => {
+    if(data.length > 0)
+    res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('All Matches', data));
+    else
+    res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('No Upcoming matches found, please fetch new Data!'));
+  })
+  .catch((error) => {
+    // winstonLogging.error(`${error.status || 500} - ${error.message} - ${req.originalUrl}`);
+    res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
+  });
+});
+
+
 
 
 

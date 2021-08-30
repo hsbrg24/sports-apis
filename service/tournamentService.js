@@ -48,19 +48,39 @@ const auth = async () => {
     }
 }
 
-const Match = {
+const tournament = {
+
+    async getAllsavedTour() {
+        try {
+            const data = await tournamentDAO.getAllToru();
+            return Promise.resolve(data);
+
+        } catch (error) {
+            return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error.message, error.stack));
+        }
+    },
+
+    async gettournamentRounds(id) {
+        try {
+            const data = await tournamentDAO.getAllToruRounds(id);
+            return Promise.resolve(data);
+
+        } catch (error) {
+            return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error.message, error.stack));
+        }
+    },
 
     async tournament(id) {
         try {
             const ACCESS_TOKEN = await auth();
             const url = `${constant.footballCred.baseURL}tournament/${id}/?access_token=${ACCESS_TOKEN}`
             console.log("url:", url);
-            
+
             const resp = JSON.parse(await promiseRequest("GET", url));
             console.log("data:", resp);
-            
+
             await tournamentDAO.createTournament(resp.data.tournament);
-            return Promise.resolve({"Record Inserted": resp});
+            return Promise.resolve({ "Record Inserted": resp });
         } catch (error) {
             console.log("look at this:", error);
             return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INVALID_DATA, error.message));
@@ -86,11 +106,11 @@ const Match = {
     async getTournamentRound(params) {
         try {
             const ACCESS_TOKEN = await auth();
-            
+
             //GET Tournament Round
             const url = `${constant.footballCred.baseURL}tournament/${params.tId}/round-detail/${params.rId}?access_token=${ACCESS_TOKEN}`
             console.log("url:", url);
-            
+
             const resp = JSON.parse(await promiseRequest("GET", url));
             // console.log("data:", resp);
             let i = 0
@@ -99,7 +119,7 @@ const Match = {
             for (i; i < resp.data.round.matches.length; i++) {
                 await matchDAO.create(resp.data.round.matches[i]);
             }
-            
+
             return Promise.resolve(`Inserted total of ${i} matches from round_key ${resp.data.round.key} & round_name ${resp.data.round.name}!`);
         } catch (error) {
             console.log("look at this:", error);
@@ -117,7 +137,39 @@ const Match = {
         }
     },
 
-    
+
+    async getSavedMatchesFromDB(params) {
+        try {
+            const condition = { "round.key": params.rId, "tournament.key": params.tId }
+            let data = {}
+            data = await matchDAO.getAllMatches(condition);
+            if (data.length === 0) {
+                const ACCESS_TOKEN = await auth();
+
+                //GET Tournament Round
+                const url = `${constant.footballCred.baseURL}tournament/${params.tId}/round-detail/${params.rId}?access_token=${ACCESS_TOKEN}`
+                // console.log("url:", url);
+
+                const resp = JSON.parse(await promiseRequest("GET", url));
+                console.log("data:", resp.data.round.matches);
+                let i = 0
+
+                //updating matches from Tournament 
+                for (i; i < resp.data.round.matches.length; i++) {
+                    await matchDAO.create(resp.data.round.matches[i]);
+                }
+                return Promise.resolve(resp.data.round.matches);
+
+            }
+            console.log("data:", data.length);
+            return Promise.resolve(data);
+        } catch (error) {
+            return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INVALID_DATA, error.message, error.stack));
+        }
+    },
+
+
+
 
 
     async getAllSavedMatches() {
@@ -133,5 +185,5 @@ const Match = {
 
 }
 
-module.exports = Match;
+module.exports = tournament;
 

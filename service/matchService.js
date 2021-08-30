@@ -6,7 +6,7 @@ const { auth } = require('../utils/authUtility');
 const res = require('../utils/custom-error-response');
 
 const lineUpDAO = require('../dao/lineUpDao');
-const tournamentDAO = require('../dao/tournamentDao');
+const matchDAO = require('../dao/matchDao');
 
 
 const promiseRequest = function (methodName, url, json) {
@@ -63,7 +63,7 @@ const Match = {
             console.log("resp:", resp);
             
             // await tournamentDAO.createTournament(resp.data.tournament);
-            
+
             return Promise.resolve({ "Record Inserted": resp });
         
         } catch (error) {
@@ -79,17 +79,28 @@ const Match = {
 
             const url = `${constant.footballCred.baseURL}tournament/${tId}/team/${teamId}?access_token=${ACCESS_TOKEN}`
             console.log("url:", url);
-            
+
             const resp = JSON.parse(await promiseRequest("GET", url));
             console.log("resp:", resp);
-            
+
             // await tournamentDAO.createTournament(resp.data.tournament);
             
             return Promise.resolve({ "Resp": resp });
-        
+
         } catch (error) {
             console.log("look at this:", error);
             return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INVALID_DATA, error.message));
+        }
+    },
+
+    async getTodaysMatches(params) {
+        try {
+            const { date } = params
+            const getMatches = await matchDAO.getMatchesByDate(date);
+            console.log("getMatch:", getMatches);
+            return Promise.resolve([{ total: getMatches.length, allMatches: getMatches }]);
+        } catch (error) {
+            return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INTERNAL_ERROR, error.message, error.stack));
         }
     },
 

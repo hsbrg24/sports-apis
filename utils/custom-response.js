@@ -6,7 +6,7 @@ const customResponse = {
     data: {},
     response: function (msg, result) {
         this.message = msg;
-        this.data = result || '';
+        this.data = result || null;
         // this.status = this.status
         return this;
     }

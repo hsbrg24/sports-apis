@@ -67,7 +67,33 @@ exports.createTournament = async (tournament) => {
 
 
 exports.getAlltournaments = () => {
-    return tournamentSchema.find().select({t_key:1,name:1,_id:0});
+    return tournamentSchema.find().select({ t_key: 1, name: 1, _id: 0 });
+};
+
+exports.getAllToru = () => {
+    return tournamentSchema.find().select({
+        _id: 0,
+        t_key: 1,
+        name: 1,
+        short_name: 1,
+        legal_name:1,
+        start_date: 1,
+        end_date: 1,
+        competition: 1
+    })
+}
+
+exports.getAllToruRounds = (t_key) => {
+    return tournamentSchema.findOne({t_key}).select({
+        _id: 0,
+        t_key: 1,
+        name: 1,
+        short_name: 1,
+        legal_name:1,
+        start_date: 1,
+        end_date: 1,
+        rounds: 1,
+    })
 }
 
 /**

@@ -23,7 +23,7 @@ router.get('/tournament', async (req, res) => {
     });
 });
 
-router.get('/tournament/:id', async (req, res) => {
+router.get('/gettournament/:id', async (req, res) => {
   await Match.tournament(req.params.id)
     .then((data) => {
       res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(customResponse.response('Data Fetched Successfully', data));
