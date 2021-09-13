@@ -8,6 +8,8 @@ var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var matchRouter = require('./routes/matches');
 var tournamentRouter = require('./routes/tournament');
+var fantasyRouter = require('./routes/fantasy');
+var terra = require('./routes/terra');
 var cors = require('cors');
 var app = express();
 
@@ -27,6 +29,8 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/match', matchRouter);
 app.use('/tournament', tournamentRouter);
+app.use('/fantasy', fantasyRouter);
+app.use('/terra', terra);
 
 
 

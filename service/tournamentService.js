@@ -79,8 +79,9 @@ const tournament = {
             const resp = JSON.parse(await promiseRequest("GET", url));
             console.log("data:", resp);
 
-            await tournamentDAO.createTournament(resp.data.tournament);
-            return Promise.resolve({ "Record Inserted": resp });
+            await tournamentDAO.createTournament(resp.data.tournament).then((action) => {
+                return Promise.resolve({ action });
+            });
         } catch (error) {
             console.log("look at this:", error);
             return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INVALID_DATA, error.message));

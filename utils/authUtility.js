@@ -1,9 +1,5 @@
 const request = require('request');
 const constant = require('./../utils/constant');
-const res = require('../utils/custom-error-response');
-const lineUpDAO = require('../dao/lineUpDao');
-const tournamentDAO = require('../dao/tournamentDao');
-
 
 const promiseRequest = function (methodName, url, json) {
     const options = {
