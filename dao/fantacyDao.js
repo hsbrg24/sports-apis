@@ -27,3 +27,6 @@ exports.createMatchFantacyData = async (fMatch) => {
     }
 };
 
+exports.getallFantacyMatchData = async () => {
+    return await fantacySchema.find();
+}

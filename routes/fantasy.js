@@ -15,5 +15,15 @@ router.get('/fan/:id', async (req, res) => {
     });
 });
 
+router.get('/getAllMatches', async (req, res) => {
+  await Fantasy.getAllFantacyMatches()
+    .then((data) => {
+      res.status(constant.HTTP_STATUS_CODE.SUCCESS).json(data);
+    })
+    .catch((error) => {
+      res.status(error.status || constant.HTTP_STATUS_CODE.INTERNAL_ERROR).send(error);
+    });
+});
+
 
 module.exports = router;

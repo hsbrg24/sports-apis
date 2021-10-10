@@ -55,6 +55,18 @@ const Fantasy = {
         }
     },
 
+    async getAllFantacyMatches(){
+        try {
+            const resp = await FantacyDao.getallFantacyMatchData();
+
+            return Promise.resolve({length: resp.length ,resp});
+
+        } catch (error) {
+            return Promise.reject(res.error(constant.HTTP_STATUS_CODE.INVALID_DATA, error.message));
+        }
+
+    }
+
 }
 
 module.exports = Fantasy;
